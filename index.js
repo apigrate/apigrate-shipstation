@@ -30,6 +30,18 @@ ShipStation.prototype._formatQueryString = function(queryObj){
   return qString;
 };
 
+ShipStation.prototype.getOrder = function(id){
+  var deferred = Q.defer();
+  this.baseRequest.get('/orders/'+ id, {json: true}, function(error, response, body){
+    if(_.isNil(error)){
+      deferred.resolve(body);
+    } else {
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
+
 ShipStation.prototype.listOrders = function(queryObj){
   var deferred = Q.defer();
   var qString = this._formatQueryString(queryObj);
