@@ -122,6 +122,28 @@ ShipStation.prototype.markOrderAsShipped = function(orderId, carrierCode,
   });
   return deferred.promise;
 };
+/**
+  Saves (creates or updates) an order.
+  If the orderKey is specified, the method becomes idempotent and the
+  existing order with that key will be updated. Note: Only orders in an open
+  status in ShipStation (awaiting_payment,awaiting_shipment, and on_hold) can be
+  updated through this method.
+  @param toSave the order payload (see: http://www.shipstation.com/developer-api/#/reference/orders/createupdate-order/create/update-order )
+*/
+ShipStation.prototype.saveOrder = function(toSave){
+  var deferred = Q.defer();
+  var payload=toSave;
+  this.baseRequest.post({url: 'orders/createorder',
+    json: true, body: payload}, function(error, response, body){
+    if(_.isNil(error)){
+      deferred.resolve(body);
+    } else {
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
+
 
 ShipStation.prototype.tagOrder = function(orderId, tagId){
   var deferred = Q.defer();
