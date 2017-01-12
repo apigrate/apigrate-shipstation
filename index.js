@@ -1,3 +1,4 @@
+//Version 1.0.3
 var request = require('request');
 var _ = require('lodash');
 var Q = require('q');
@@ -179,4 +180,5 @@ ShipStation.prototype.untagOrder = function(orderId, tagId){
   return deferred.promise;
 };
 
+//$export(null, ShipStation);
 module.exports=ShipStation;
