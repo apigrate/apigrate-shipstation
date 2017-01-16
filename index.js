@@ -1,4 +1,4 @@
-//Version 1.0.3
+//Version 1.0.4
 var request = require('request');
 var _ = require('lodash');
 var Q = require('q');
@@ -47,6 +47,19 @@ ShipStation.prototype.listOrders = function(queryObj){
   var deferred = Q.defer();
   var qString = this._formatQueryString(queryObj);
   this.baseRequest.get('/orders/'+ qString, {json: true}, function(error, response, body){
+    if(_.isNil(error)){
+      deferred.resolve(body);
+    } else {
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
+
+ShipStation.prototype.listShipments = function(queryObj){
+  var deferred = Q.defer();
+  var qString = this._formatQueryString(queryObj);
+  this.baseRequest.get('/shipments/'+ qString, {json: true}, function(error, response, body){
     if(_.isNil(error)){
       deferred.resolve(body);
     } else {
@@ -135,6 +148,41 @@ ShipStation.prototype.saveOrder = function(toSave){
   var deferred = Q.defer();
   var payload=toSave;
   this.baseRequest.post({url: 'orders/createorder',
+    json: true, body: payload}, function(error, response, body){
+    if(_.isNil(error)){
+      deferred.resolve(body);
+    } else {
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
+
+ShipStation.prototype.listWebhooks = function(){
+  var deferred = Q.defer();
+  this.baseRequest.get('webhooks', {json: true}, function(error, response, body){
+    if(_.isNil(error)){
+      deferred.resolve(body);
+    } else {
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
+
+/**
+  @param webhookInfo
+  @example {
+  "target_url": "http://someexamplewebhookurl.com/neworder",
+  "event": "ORDER_NOTIFY",
+  "store_id": null,
+  "friendly_name": "My Webhook"
+ }
+*/
+ShipStation.prototype.subscribeWebhook = function(webhookInfo){
+  var deferred = Q.defer();
+  var payload=webhookInfo;
+  this.baseRequest.post({url: 'webhooks/subscribe',
     json: true, body: payload}, function(error, response, body){
     if(_.isNil(error)){
       deferred.resolve(body);
