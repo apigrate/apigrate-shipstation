@@ -209,6 +209,18 @@ ShipStation.prototype.subscribeWebhook = function(webhookInfo){
   return deferred.promise;
 };
 
+ShipStation.prototype.unsubscribeWebhook = function(webhookId){
+  var deferred = Q.defer();
+  this.baseRequest.delete({url: 'webhooks/'+webhookId,
+    json: true}, function(error, response, body){
+    if(_.isNil(error)){
+      deferred.resolve(body);
+    } else {
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
 
 ShipStation.prototype.tagOrder = function(orderId, tagId){
   var deferred = Q.defer();
