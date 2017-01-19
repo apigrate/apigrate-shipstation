@@ -1,12 +1,25 @@
-//Version 1.0.4
-var request = require('request');
-var _ = require('lodash');
-var Q = require('q');
+//Version 1.0.5
+var request = _rqr('request');
+var _ = _rqr('lodash');
+var Q = _rqr('q');
+// -----------------------------------------------------------------------------
+var Logger = _rqr('@apigrate/logger');
+
+// -----------------------------------------------------------------------------
+/* for nodejs + builtio */
+function _rqr(lib){ return typeof $require != 'undefined' ? $require(lib) : require(lib); }
+function _exp(constr){ if(typeof $export != 'undefined'){ $export(null, constr); } else { module.exports=constr; } }
+
+// -----------------------------------------------------------------------------
+var LOGGER = new Logger('INFO');
 
 /**
   ShipStation API wrapper.
+  @param apiKey
+  @param apiSecret
+  @param logger (optional) Apigrate Logger instance (default INFO level to console)
 */
-function ShipStation(apiKey, apiSecret) {
+function ShipStation(apiKey, apiSecret, logger) {
   this.baseRequest = request.defaults({
       method: 'GET',
       baseUrl: 'https://ssapi.shipstation.com/',
@@ -14,6 +27,9 @@ function ShipStation(apiKey, apiSecret) {
         'Authorization': 'Basic ' + new Buffer(apiKey + ":" + apiSecret).toString('base64')
     }
   });
+  if(!_.isNil()){
+    LOGGER = logger;
+  }
 }
 
 ShipStation.prototype._formatQueryString = function(queryObj){
@@ -228,5 +244,4 @@ ShipStation.prototype.untagOrder = function(orderId, tagId){
   return deferred.promise;
 };
 
-//$export(null, ShipStation);
-module.exports=ShipStation;
+_exp(ShipStation);
