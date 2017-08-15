@@ -1,4 +1,4 @@
-//Version 1.0.5
+//Version 1.0.7
 var request = _rqr('request');
 var _ = _rqr('lodash');
 var Q = _rqr('q');
@@ -25,9 +25,9 @@ function ShipStation(apiKey, apiSecret, logger) {
       baseUrl: 'https://ssapi.shipstation.com/',
       headers: {
         'Authorization': 'Basic ' + new Buffer(apiKey + ":" + apiSecret).toString('base64')
-    }
+      }
   });
-  if(!_.isNil()){
+  if(!_.isNil(logger)){
     LOGGER = logger;
   }
 }
@@ -51,8 +51,10 @@ ShipStation.prototype.getOrder = function(id){
   var deferred = Q.defer();
   this.baseRequest.get('/orders/'+ id, {json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -64,8 +66,10 @@ ShipStation.prototype.listOrders = function(queryObj){
   var qString = this._formatQueryString(queryObj);
   this.baseRequest.get('/orders/'+ qString, {json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -77,8 +81,10 @@ ShipStation.prototype.listShipments = function(queryObj){
   var qString = this._formatQueryString(queryObj);
   this.baseRequest.get('/shipments/'+ qString, {json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -89,8 +95,10 @@ ShipStation.prototype.listTags = function(){
   var deferred = Q.defer();
   this.baseRequest.get('/accounts/listtags', {json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -99,13 +107,16 @@ ShipStation.prototype.listTags = function(){
 
 
 ShipStation.prototype.listOrdersTaggedWith = function(orderStatus, tagId){
+  LOGGER.DEBUG('Listing orders targged with status "'+orderStatus+'", tag id '+ tagId);
   var queryObj = {"orderStatus":orderStatus, "tagId": tagId};
   var deferred = Q.defer();
   var qString = this._formatQueryString(queryObj);
   this.baseRequest.get('orders/listbytag'+ qString, {json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -145,8 +156,10 @@ ShipStation.prototype.markOrderAsShipped = function(orderId, carrierCode,
   this.baseRequest.post({url: 'orders/markasshipped',
     json: true, body: payload}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -165,11 +178,15 @@ ShipStation.prototype.saveOrder = function(toSave){
   var payload=toSave;
   this.baseRequest.post({url: 'orders/createorder',
     json: true, body: payload}, function(error, response, body){
-    if(_.isNil(error)){
-      deferred.resolve(body);
-    } else {
-      deferred.reject(error);
-    }
+      if(_.isNil(error)){
+        if(response.statusCode==200 && response.statusCode==201){
+          deferred.resolve(body);
+        } else {
+          deferred.reject( new Error(response.body.Message + ' Details:\n' + JSON.stringify(response.body.ModelState) ) );
+        }
+      } else {
+        deferred.reject(error);
+      }
   });
   return deferred.promise;
 };
@@ -178,8 +195,10 @@ ShipStation.prototype.listWebhooks = function(){
   var deferred = Q.defer();
   this.baseRequest.get('webhooks', {json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -201,8 +220,10 @@ ShipStation.prototype.subscribeWebhook = function(webhookInfo){
   this.baseRequest.post({url: 'webhooks/subscribe',
     json: true, body: payload}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -214,8 +235,10 @@ ShipStation.prototype.unsubscribeWebhook = function(webhookId){
   this.baseRequest.delete({url: 'webhooks/'+webhookId,
     json: true}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -231,8 +254,10 @@ ShipStation.prototype.tagOrder = function(orderId, tagId){
   this.baseRequest.post({url: 'orders/addtag',
     json: true, body: payload}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -248,8 +273,10 @@ ShipStation.prototype.untagOrder = function(orderId, tagId){
   this.baseRequest.post({url: 'orders/removetag',
     json: true, body: payload}, function(error, response, body){
     if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
     } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });

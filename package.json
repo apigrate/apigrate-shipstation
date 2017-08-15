@@ -1,6 +1,6 @@
 {
   "name": "@apigrate/shipstation",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "ShipStation API wrapper by Apigrate",
   "main": "index.js",
   "scripts": {
