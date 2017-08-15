@@ -1,4 +1,4 @@
-//Version 1.0.7
+//Version 1.0.9
 var request = _rqr('request');
 var _ = _rqr('lodash');
 var Q = _rqr('q');
@@ -179,10 +179,10 @@ ShipStation.prototype.saveOrder = function(toSave){
   this.baseRequest.post({url: 'orders/createorder',
     json: true, body: payload}, function(error, response, body){
       if(_.isNil(error)){
-        if(response.statusCode==200 && response.statusCode==201){
+        if(response.statusCode==200 || response.statusCode==201){
           deferred.resolve(body);
         } else {
-          deferred.reject( new Error(response.body.Message + ' Details:\n' + JSON.stringify(response.body.ModelState) ) );
+          deferred.reject( new Error(response.body.Message + ' Details:\n' + JSON.stringify(response.body) ) );
         }
       } else {
         deferred.reject(error);
