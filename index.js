@@ -1,9 +1,7 @@
-//Version 1.0.9
+//Version 1.0.10
 var request = _rqr('request');
 var _ = _rqr('lodash');
 var Q = _rqr('q');
-// -----------------------------------------------------------------------------
-var Logger = _rqr('@apigrate/logger');
 
 // -----------------------------------------------------------------------------
 /* for nodejs + builtio */
@@ -11,7 +9,7 @@ function _rqr(lib){ return typeof $require != 'undefined' ? $require(lib) : requ
 function _exp(constr){ if(typeof $export != 'undefined'){ $export(null, constr); } else { module.exports=constr; } }
 
 // -----------------------------------------------------------------------------
-var LOGGER = new Logger('INFO');
+var LOGGER = null;
 
 /**
   ShipStation API wrapper.
@@ -29,6 +27,8 @@ function ShipStation(apiKey, apiSecret, logger) {
   });
   if(!_.isNil(logger)){
     LOGGER = logger;
+  } else {
+    LOGGER = { ERROR:console.error, WARN:console.error, INFO:console.info, DEBUG:console.log, TRACE:console.log };
   }
 }
 
@@ -45,6 +45,22 @@ ShipStation.prototype._formatQueryString = function(queryObj){
     qString = '?'+qString;
   }
   return qString;
+};
+
+ShipStation.prototype.createWarehouse = function(toSave){
+  var deferred = Q.defer();
+  var payload=toSave;
+  this.baseRequest.post({url: 'warehouses/createwarehouse',
+    json: true, body: payload}, function(error, response, body){
+    if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
+      deferred.resolve(body);
+    } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
 };
 
 ShipStation.prototype.getOrder = function(id){
@@ -105,13 +121,27 @@ ShipStation.prototype.listTags = function(){
   return deferred.promise;
 };
 
-
 ShipStation.prototype.listOrdersTaggedWith = function(orderStatus, tagId){
   LOGGER.DEBUG('Listing orders targged with status "'+orderStatus+'", tag id '+ tagId);
   var queryObj = {"orderStatus":orderStatus, "tagId": tagId};
   var deferred = Q.defer();
   var qString = this._formatQueryString(queryObj);
   this.baseRequest.get('orders/listbytag'+ qString, {json: true}, function(error, response, body){
+    if(_.isNil(error)){
+      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
+      deferred.resolve(body);
+    } else {
+      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
+      deferred.reject(error);
+    }
+  });
+  return deferred.promise;
+};
+
+ShipStation.prototype.listWarehouses = function(queryObj){
+  var deferred = Q.defer();
+  var qString = this._formatQueryString(queryObj);
+  this.baseRequest.get('/warehouses/'+ qString, {json: true}, function(error, response, body){
     if(_.isNil(error)){
       LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
       deferred.resolve(body);
