@@ -1,4 +1,4 @@
-//Version 1.0.10
+//Version 1.0.11
 var request = _rqr('request');
 var _ = _rqr('lodash');
 var Q = _rqr('q');
@@ -53,10 +53,12 @@ ShipStation.prototype.createWarehouse = function(toSave){
   this.baseRequest.post({url: 'warehouses/createwarehouse',
     json: true, body: payload}, function(error, response, body){
     if(_.isNil(error)){
-      LOGGER.TRACE("ShipStation raw response: " + JSON.stringify(body));
-      deferred.resolve(body);
+      if(response.statusCode==200 || response.statusCode==201){
+        deferred.resolve(body);
+      } else {
+        deferred.reject( new Error("createwarehouse error. " + response.body.Message + ' Details:\n' + JSON.stringify(response.body) ) );
+      }
     } else {
-      LOGGER.ERROR("ShipStation error: " + JSON.stringify(error));
       deferred.reject(error);
     }
   });
@@ -212,7 +214,7 @@ ShipStation.prototype.saveOrder = function(toSave){
         if(response.statusCode==200 || response.statusCode==201){
           deferred.resolve(body);
         } else {
-          deferred.reject( new Error(response.body.Message + ' Details:\n' + JSON.stringify(response.body) ) );
+          deferred.reject( new Error("createorder error. " + response.body.Message + ' Details:\n' + JSON.stringify(response.body) ) );
         }
       } else {
         deferred.reject(error);
