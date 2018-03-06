@@ -1,6 +1,6 @@
 {
   "name": "@apigrate/shipstation",
-  "version": "1.0.11",
+  "version": "2.0.0",
   "description": "ShipStation API wrapper by Apigrate",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,13 @@
     "url": "git+https://github.com/gaumeister/apigrate-shipstation.git"
   },
   "author": "Derek Gau",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/gaumeister/apigrate-shipstation/issues"
   },
   "homepage": "https://github.com/gaumeister/apigrate-shipstation#readme",
   "dependencies": {
     "lodash": "^4.17.2",
-    "moment": "^2.17.1",
-    "q": "^1.4.1",
     "request": "^2.79.0"
   }
 }

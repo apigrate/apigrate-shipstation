@@ -1,5 +1,5 @@
-var request = require('request');
-var _ = require('lodash');
+var request = $require('request');
+var _ = $require('lodash');
 
 /**
   NodeJS ShipStation API connector. Make promise-based API calls to the ShipStation API.
@@ -21,7 +21,7 @@ function ShipStation(apiKey, apiSecret, logger) {
   if(!_.isNil(logger)){
     this.LOGGER = logger;
   } else {
-    this.LOGGER = { error: console.error, warn: console.error, info: function(){}, debug: function(){}, silly: function(){}};
+    this.LOGGER = { error: $log, warn: $log, info:function(){}, debug:function(){}, silly:function(){}};
   }
 }
 
@@ -233,8 +233,7 @@ ShipStation.prototype._delete = function(url){
   });
 };
 
-
-module.exports=ShipStation;
+$export(null, ShipStation);
 /*
   Copyright 2018 Apigrate, LLC
 
