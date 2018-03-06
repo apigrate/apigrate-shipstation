@@ -23,6 +23,11 @@ ssapi.listOrders(orderSearchParms)
 
 ## Available Methods
 
+### Carrier-Related
+1. listCarriers
+1. listPackagesByCarrier
+1. listServicesByCarrier
+
 ### Order-Related
 1. getOrder
 1. listOrders
@@ -33,15 +38,20 @@ ssapi.listOrders(orderSearchParms)
 1. tagOrder
 1. untagOrder
 
-
 ### Shipment-Related
 1. listShipments
 1. createShipmentLabel
 1. voidLabel
 1. getRates
 
-### Carrier-Related
-
 ### Tags
+1. listTags
+
+### Warehouses
+1. listWarehouses
+1. createWarehouse
 
 ### Webhooks
+1. listWebhooks
+1. subscribeWebhook
+1. unsubscribeWebhook
