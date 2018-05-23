@@ -37,6 +37,7 @@ ssapi.listOrders(orderSearchParms)
 1. markOrderAsShipped
 1. tagOrder
 1. untagOrder
+1. holdOrderUntil
 
 ### Shipment-Related
 1. listShipments
