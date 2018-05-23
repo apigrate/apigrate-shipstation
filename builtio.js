@@ -23,7 +23,7 @@ var _ = $require('lodash');
   @param logger (optional) Logger instance (winston style logging). If omitted,
   error and warnings will be output to console.
 
-  @version 2.0.0
+  @version 2.1.0
 */
 function ShipStation(apiKey, apiSecret, logger) {
   this.baseRequest = request.defaults({
@@ -119,6 +119,19 @@ ShipStation.prototype.untagOrder = function(orderId, tagId){
     "tagId": tagId
   };
   return this._post('orders/removetag', payload);
+};
+
+/**
+  @param orderId
+  @param holdUntilDate in YYYY-MM-DD format
+  @see https://shipstation.docs.apiary.io/#reference/orders/hold-order-until/hold-order-until
+*/
+ShipStation.prototype.holdOrderUntil = function(orderId, holdUntilDate){
+  var payload={
+    "orderId": orderId,
+    "holdUntilDate": holdUntilDate
+  };
+  return this._post('orders/holduntil', payload);
 };
 
 // Shipments ...................................................................
