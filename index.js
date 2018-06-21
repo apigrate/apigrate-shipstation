@@ -154,6 +154,11 @@ ShipStation.prototype.voidLabel = function(shipmentId){
   return this._post('shipments/voidlabel', {shipmentId: shipmentId});
 };
 
+// Fulfillments (a.k.a. manually shipped shipments) ............................
+ShipStation.prototype.listFulfillments = function(queryObj){
+  return this._get('fulfillments/', queryObj);
+};
+
 // Tags ........................................................................
 
 ShipStation.prototype.listTags = function(){
