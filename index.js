@@ -23,7 +23,7 @@ var _ = require('lodash');
   @param logger (optional) Logger instance (winston style logging). If omitted,
   error and warnings will be output to console.
 
-  @version 2.1.0
+  @version 2.2.0
 */
 function ShipStation(apiKey, apiSecret, logger) {
   this.baseRequest = request.defaults({
@@ -204,7 +204,7 @@ ShipStation.prototype.listWebhooks = function(){
   "friendly_name": "My Webhook"
  }
 */
-ShipStation.prototype.subscribeWebhook = function(){
+ShipStation.prototype.subscribeWebhook = function(webhookInfo){
   return this._post('webhooks/subscribe', webhookInfo);
 };
 
