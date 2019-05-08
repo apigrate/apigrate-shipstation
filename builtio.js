@@ -23,7 +23,7 @@ var _ = $require('lodash');
   @param logger (optional) Logger instance (winston style logging). If omitted,
   error and warnings will be output to console.
 
-  @version 2.1.0
+  @version 2.3.0
 */
 function ShipStation(apiKey, apiSecret, logger) {
   this.baseRequest = request.defaults({
@@ -36,7 +36,7 @@ function ShipStation(apiKey, apiSecret, logger) {
   if(!_.isNil(logger)){
     this.LOGGER = logger;
   } else {
-    this.LOGGER = { error: $log, warn: $log, info:function(){}, debug:function(){}, silly:function(){}};
+    this.LOGGER = { error: console.error, warn: console.error, info: function(){}, debug: function(){}, silly: function(){}};
   }
 }
 
@@ -154,6 +154,11 @@ ShipStation.prototype.voidLabel = function(shipmentId){
   return this._post('shipments/voidlabel', {shipmentId: shipmentId});
 };
 
+// Fulfillments (a.k.a. manually shipped shipments) ............................
+ShipStation.prototype.listFulfillments = function(queryObj){
+  return this._get('fulfillments/', queryObj);
+};
+
 // Tags ........................................................................
 
 ShipStation.prototype.listTags = function(){
@@ -199,7 +204,7 @@ ShipStation.prototype.listWebhooks = function(){
   "friendly_name": "My Webhook"
  }
 */
-ShipStation.prototype.subscribeWebhook = function(){
+ShipStation.prototype.subscribeWebhook = function(webhookInfo){
   return this._post('webhooks/subscribe', webhookInfo);
 };
 

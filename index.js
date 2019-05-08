@@ -23,7 +23,7 @@ var _ = require('lodash');
   @param logger (optional) Logger instance (winston style logging). If omitted,
   error and warnings will be output to console.
 
-  @version 2.2.0
+  @version 2.3.0
 */
 function ShipStation(apiKey, apiSecret, logger) {
   this.baseRequest = request.defaults({
