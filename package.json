@@ -1,6 +1,6 @@
 {
   "name": "@apigrate/shipstation",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "ShipStation API wrapper by Apigrate",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/gaumeister/apigrate-shipstation#readme",
   "dependencies": {
-    "lodash": "^4.17.10",
-    "request": "^2.87.0"
+    "lodash": "^4.17.14",
+    "request": "^2.88.0"
   }
 }
