@@ -245,7 +245,7 @@ ShipStation.prototype._post = function(url, payload){
         resolve(body);
       } else {
         self.LOGGER.silly("ShipStation raw response: " + JSON.stringify(body));
-        reject(new Error('Error (code='+response.statusCode+') ' + body));
+        reject(new Error('Error (code='+response.statusCode+') ' + JSON.stringify(body)));
       }
     });
   });

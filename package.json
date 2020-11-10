@@ -1,7 +1,7 @@
 {
   "name": "@apigrate/shipstation",
-  "version": "2.3.1",
-  "description": "ShipStation API wrapper by Apigrate",
+  "version": "2.3.2",
+  "description": "ShipStatileon API wrapper by Apigrate",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/gaumeister/apigrate-shipstation#readme",
   "dependencies": {
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.20",
     "request": "^2.88.0"
   }
 }
