@@ -1,6 +1,6 @@
 {
   "name": "@apigrate/shipstation",
-  "version": "2.3.2",
+  "version": "3.0.0",
   "description": "ShipStatileon API wrapper by Apigrate",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/gaumeister/apigrate-shipstation#readme",
   "dependencies": {
-    "lodash": "^4.17.20",
-    "request": "^2.88.0"
+    "debug": "^4.3.4"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

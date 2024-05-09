@@ -1,58 +1,129 @@
 # apigrate-shipstation
-Shipstation API wrapper by Apigrate
+
+A minimal-dependency API connector that implements all the API methods of the [Shipstation API](https://www.shipstation.com/docs/api/). It fully supports async/await.
 
 ## Usage
 ```javascript
-var ShipStation = require('@apigrate/shipstation');
+// Initialization
+var { ShipStation } = require('@apigrate/shipstation');
 
-var ssapi = new ShipStation('key', 'secret');
-
-orderSearchParms = {
-  createDateStart: '2018-01-01 00:00:00',
-  createDateEnd :'2018-03-01 00:00:00'
-};
-
-ssapi.listOrders(orderSearchParms)
-.then(function(orders){
-  // orders available...
-})
-.catch(function(err){
-  // handle the error...
-});
+var ship = new ShipStation('key', 'secret');
 ```
 
-## Available Methods
+```javascript
+// List Orders
 
-### Carrier-Related
-1. listCarriers
-1. listPackagesByCarrier
-1. listServicesByCarrier
+let { orders } = await ship.listOrders({ page: 1, pageSize: 10, }); //etc.
+```
 
-### Order-Related
-1. getOrder
-1. listOrders
-1. listOrdersTaggedWith
-1. saveOrder
-1. createLabelForOrder
-1. markOrderAsShipped
-1. tagOrder
-1. untagOrder
-1. holdOrderUntil
+```javascript
+// Create an Order
 
-### Shipment-Related
-1. listShipments
-1. createShipmentLabel
-1. voidLabel
-1. getRates
+let myOrder = await ship.createOrUpdateOrder({
+    orderKey: 'TEST001',
+    orderNumber: 'TEST001',
+    orderDate: '2023-11-28',
+    orderStatus: 'awaiting_shipment',
+    billTo: {
+      name: 'John Doe',
+      company: 'Test Company',
+      street1: '1234 Test St',
+      city: 'Austin',
+      state: 'TX',
+      postalCode: '78701',
+      country: 'US',
+      phone: '512-555-5555',
+    },
+    shipTo: {
+      name: 'Jane Doe',
+      company: 'Test Company',
+      street1: '1234 Test St',
+      city: 'Austin',
+      state: 'TX',
+      postalCode: '78701',
+      country: 'US',
+      phone: '512-555-5555',
+    },
+    items:[
+      {
+        lineItemKey: 'SKU001',
+        sku: 'SKU001',
+        name: 'Test Product',
+        quantity: 1,
+        unitPrice: 10.00,
+        taxAmount: 0,
+        shippingAmount: 0,
+        warehouseLocation: 'A1',
+        options: [
+          {
+            name: 'Size',
+            value: 'Large'
+          }
+        ]
+      }
+    ],
+    amountPaid: 10.00,
+  });
 
-### Tags
-1. listTags
+```
 
-### Warehouses
-1. listWarehouses
-1. createWarehouse
+## Available API Endpoints
 
-### Webhooks
-1. listWebhooks
-1. subscribeWebhook
-1. unsubscribeWebhook
+* Accounts
+    * registerAccount
+    * listAccounts
+* Carriers
+    * listCarriers
+    * addFundsToCarrier
+    * getCarrierInfo
+    * listPackages
+* Customers
+    * getCustomerInfo
+    * listCustomers
+* Orders
+    * addTag
+    * assignUser
+    * createOrUpdateOrder
+    * createOrUpdateMultipleOrders
+    * createLabelForOrder
+    * deleteOrder
+    * getOrder
+    * holdOrder
+    * listOrders
+    * listOrdersByTag
+    * listFulfillments
+    * markShipped
+    * removeTag
+    * restoreFromHold
+    * unassignUser
+* Products
+    * getProduct
+    * listProducts
+    * updateProduct
+* Shipments
+    * createLabel
+    * getRates
+    * listShipments
+    * voidLabel
+* Stores
+    * deactivateStore
+    * getStoreRefreshStatus
+    * getStoreInfo
+    * listMarketPlaces
+    * listStores
+    * reactivateStore
+    * refreshStore
+    * updateStore
+* Users
+    * listUsers
+* Ship From Locations/Warehouses
+    * createWarehouse
+    * deleteWarehouse
+    * getWarehouse
+    * listWarehouses
+    * updateWarehouse
+* Webhooks
+    * listWebhooks
+    * subscribeToWebhook
+    * unsubscribeFromWebhook
+

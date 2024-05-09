@@ -40,3 +40,6 @@ config
 
 temp.*
 shipstation-test.js
+
+.env
+.env.*.local
