@@ -26,9 +26,10 @@ class ShipStation {
    * @param {string} apiKey 
    * @param {string} apiSecret
    */
-  constructor(apiKey, apiSecret){
+  constructor(apiKey, apiSecret, partnerKey = null){
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
+    this.partnerKey = partnerKey; //Optional, only used for High-volume Enabled Partner Accounts.
     this.baseUrl = 'https://ssapi.shipstation.com';
   }
 
@@ -590,6 +591,11 @@ class ShipStation {
         "Authorization" : "Basic " + Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64')
       },
     };
+
+    // only add if a partnerKey was actually provided, Only for High Volume Partner Accounts.
+    if (this.partnerKey) {
+      fetchOpts.headers["x-partner"] = this.partnerKey;
+    }
     
     let qstring = '';
     if(query){
