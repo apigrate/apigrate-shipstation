@@ -227,7 +227,7 @@ class ShipStation {
     for(let r of required){
       if(!query[r]) throw new Error(`Missing required field: ${r}`);
     }
-    return this.doFetch('GET', `/orders/listbytag/${tagId}`, query);
+    return this.doFetch('GET', `/orders/listbytag/${query.tagId}`, query);
   }
 
   /**
