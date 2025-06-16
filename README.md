@@ -8,6 +8,9 @@ A minimal-dependency API connector that implements all the API methods of the [S
 var { ShipStation } = require('@apigrate/shipstation');
 
 var ship = new ShipStation('key', 'secret');
+
+// OR, for high-volume accounts
+var ship = new ShipStation('key', 'secret', 'partnerkey'); // partnerkey is optional
 ```
 
 ```javascript
